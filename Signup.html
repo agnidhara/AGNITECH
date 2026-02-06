@@ -1,72 +1,56 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>AGNITECH Signup</title>
+  <title>AGNITECH Signup</title>
 
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 
-<style>
-body{
-font-family: Arial;
-background:#111;
-color:white;
-display:flex;
-justify-content:center;
-align-items:center;
-height:100vh;
-}
+  <style>
+    body {
+      font-family: Arial;
+      background: #111;
+      color: white;
+      text-align: center;
+      margin-top: 100px;
+    }
 
-.box{
-background:#222;
-padding:30px;
-border-radius:10px;
-text-align:center;
-width:300px;
-}
+    input {
+      padding: 10px;
+      margin: 8px;
+      width: 250px;
+    }
 
-input{
-width:90%;
-padding:10px;
-margin:8px;
-border:none;
-border-radius:6px;
-}
-
-button{
-padding:10px 20px;
-background:#00c6ff;
-border:none;
-border-radius:6px;
-cursor:pointer;
-}
-</style>
+    button {
+      padding: 10px 20px;
+      cursor: pointer;
+    }
+  </style>
 </head>
 
 <body>
 
-<div class="box">
-<h2>AGNITECH Signup</h2>
+  <h1>🔥 AGNITECH Signup</h1>
 
-<input id="username" placeholder="Username"><br>
-<input id="email" placeholder="Email"><br>
-<input id="password" type="password" placeholder="Password"><br>
+  <input id="username" placeholder="Username"><br>
+  <input id="email" placeholder="Email"><br>
+  <input id="password" type="password" placeholder="Password"><br>
 
-<button onclick="signup()">Signup</button>
+  <button onclick="signup()">Signup</button>
 
-<p id="msg"></p>
-</div>
+  <p id="message"></p>
 
 <script>
 
 const firebaseConfig = {
-apiKey: "AIzaSyBJCPp0sAkNxgQ0PIXz9gSHIFXKpLmgD9Q",
-authDomain: "agnitech-3eee6.firebaseapp.com",
-projectId: "agnitech-3eee6",
-storageBucket: "agnitech-3eee6.appspot.com",
-messagingSenderId: "33138668117",
-appId: "1:33138668117:web:697bcfeb34615b482b5adc"
+  apiKey: "AIzaSyBvJLnf9N3funQCXC8hXPRiPlqhqmklIAE",
+  authDomain: "agnitech-mee76.firebaseapp.com",
+  projectId: "agnitech-mee76",
+  storageBucket: "agnitech-mee76.firebasestorage.app",
+  messagingSenderId: "407688837810",
+  appId: "1:407688837810:web:452b33686d257ab026e7ab"
 };
 
 firebase.initializeApp(firebaseConfig);
@@ -74,33 +58,33 @@ firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db = firebase.firestore();
 
-function signup(){
+function signup() {
 
-let username = document.getElementById("username").value;
-let email = document.getElementById("email").value;
-let password = document.getElementById("password").value;
+  let username = document.getElementById("username").value;
+  let email = document.getElementById("email").value;
+  let password = document.getElementById("password").value;
 
-auth.createUserWithEmailAndPassword(email,password)
+  auth.createUserWithEmailAndPassword(email, password)
+  .then((userCredential) => {
 
-.then((userCredential)=>{
+    let uid = userCredential.user.uid;
 
-let uid = userCredential.user.uid;
+    // Save user data in Firestore
+    db.collection("users").doc(uid).set({
+      username: username,
+      email: email,
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    });
 
-db.collection("users").doc(uid).set({
-username: username,
-email: email,
-profilePic: "",
-createdAt: new Date()
-});
+    document.getElementById("message").innerText = "Signup Success ✅";
 
-document.getElementById("msg").innerText="Signup Successful!";
-window.location.href="login.html";
+    // Redirect
+    window.location.href = "dashboard.html";
 
-})
-
-.catch((error)=>{
-document.getElementById("msg").innerText=error.message;
-});
+  })
+  .catch((error) => {
+    document.getElementById("message").innerText = error.message;
+  });
 
 }
 
